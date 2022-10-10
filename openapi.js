@@ -1,5 +1,5 @@
 const dlog = (...opts) => {
-  if(1==1) console.log(...opts);
+  if(1==2) console.log(...opts);
 
 }
 const flog = (...opts) => {
