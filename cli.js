@@ -11,6 +11,4 @@ if(!fs.existsSync(SWAGGER_FILENAME)){
   `)
 }
 const swagger = require(SWAGGER_FILENAME);
-const joiTextObject = swaggerToJoi(swagger);
-
-console.log('Result\n%s',joiTextObject);
+swaggerToJoi(swagger);
