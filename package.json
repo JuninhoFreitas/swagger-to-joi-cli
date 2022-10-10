@@ -1,0 +1,25 @@
+{
+  "name": "swagger-to-joi-cli",
+  "version": "0.0.1",
+  "description": "Swagger to Joi CLI schema converter",
+  "main": "cli.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/galethil/swagger-to-joi.git"
+  },
+  "keywords": [
+    "swagger",
+    "joi",
+    "converter",
+    "schema"
+  ],
+  "author": "juninhoFreitas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JuninhoFreitas/swagger-to-joi-cli/issues"
+  },
+  "homepage": "https://github.com/JuninhoFreitas/swagger-to-joi-cli#readme",
+  "dependencies": {
+    "colors": "1.4.0"
+  }
+}
