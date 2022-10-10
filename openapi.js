@@ -1,5 +1,5 @@
 const dlog = (...opts) => {
-  if(1==2) console.log(...opts);
+  if(1==1) console.log(...opts);
 
 }
 const flog = (...opts) => {
@@ -26,7 +26,7 @@ module.exports = class OpenApiParser {
       const processingRoute = this.routes[route]
       for (const verb in processingRoute) {
         const routeMapped = processingRoute[verb]
-        flog('Parsing Verb: %s'.bgWhite, verb);
+        flog('Parsing Verb: %s'.white, verb);
         const {
           requestBody,
           responses
@@ -76,6 +76,10 @@ module.exports = class OpenApiParser {
         dlog('Contains oneOf')
         component = this.findComponentByPath(parameter.schema.oneOf[0].$ref)
       }
+      if ('anyOf' in parameter.schema && ('$ref' in parameter.schema.anyOf[0])) {
+        dlog('Contains anyOf')
+        component = this.findComponentByPath(parameter.schema.anyOf[0].$ref)
+      }
 
       // dlog('Component '.bgRed, component)
       parameter.schema = component;
@@ -92,7 +96,32 @@ module.exports = class OpenApiParser {
     } else {
       if (parameter.type) type = parameter.type
     }
-    if (!type) console.log('Not Found TYPE to Parameter: ', parameter)
+    if (!type) {
+      let component;
+      if ('$ref' in parameter) {
+        dlog('Inside of NOTYPE Contains $ref')
+        component = this.findComponentByPath(parameter.$ref, this.components);
+      }
+      if ('allOf' in parameter && ('$ref' in parameter.allOf[0])) {
+        dlog('Inside of NOTYPE Contains allOf')
+        component = this.findComponentByPath(parameter.allOf[0].$ref)
+      }
+      if ('oneOf' in parameter && ('$ref' in parameter.oneOf[0])) {
+        dlog('Inside of NOTYPE Contains oneOf')
+        component = this.findComponentByPath(parameter.oneOf[0].$ref)
+      }
+      if ('anyOf' in parameter && ('$ref' in parameter.anyOf[0])) {
+        dlog('Inside of NOTYPE Contains anyOf')
+        component = this.findComponentByPath(parameter.anyOf[0].$ref)
+      }
+      parameter.schema = component;
+      if (parameter.schema) {
+        if (parameter.schema.type) type = parameter.schema.type
+      } else {
+        if (parameter.type) type = parameter.type
+      }
+      if(!type)console.log('Not Found TYPE to Parameter: ', parameter)
+    }
 
     switch (type) {
       case 'string':
