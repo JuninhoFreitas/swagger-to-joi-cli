@@ -1,9 +1,10 @@
+const DEV_ENV = true;
 const dlog = (...opts) => {
-  if(1==2) console.log(...opts);
+  if(DEV_ENV) console.log(...opts);
 
 }
 const flog = (...opts) => {
-  if(1==1) console.log(...opts);
+  console.log(...opts);
 }
 const colors = require('colors');
 colors.enable();
@@ -62,23 +63,24 @@ module.exports = class OpenApiParser {
 
   getText(parameter) {
     let finalText = '';
-    if (parameter.schema) {
+    if (parameter) {
+      const param = parameter.schema? parameter.schema : parameter;
       let component;
-      if ('$ref' in parameter.schema) {
+      if ('$ref' in param) {
         dlog('Contains $ref')
-        component = this.findComponentByPath(parameter.schema.$ref, this.components);
+        component = this.findComponentByPath(param.$ref, this.components);
       }
-      if ('allOf' in parameter.schema && ('$ref' in parameter.schema.allOf[0])) {
+      if ('allOf' in param && ('$ref' in param.allOf[0])) {
         dlog('Contains allOf')
-        component = this.findComponentByPath(parameter.schema.allOf[0].$ref)
+        component = this.findComponentByPath(param.allOf[0].$ref)
       }
-      if ('oneOf' in parameter.schema && ('$ref' in parameter.schema.oneOf[0])) {
+      if ('oneOf' in param && ('$ref' in param.oneOf[0])) {
         dlog('Contains oneOf')
-        component = this.findComponentByPath(parameter.schema.oneOf[0].$ref)
+        component = this.findComponentByPath(param.oneOf[0].$ref)
       }
-      if ('anyOf' in parameter.schema && ('$ref' in parameter.schema.anyOf[0])) {
+      if ('anyOf' in param && ('$ref' in param.anyOf[0])) {
         dlog('Contains anyOf')
-        component = this.findComponentByPath(parameter.schema.anyOf[0].$ref)
+        component = this.findComponentByPath(param.anyOf[0].$ref)
       }
 
       // dlog('Component '.bgRed, component)
@@ -96,33 +98,8 @@ module.exports = class OpenApiParser {
     } else {
       if (parameter.type) type = parameter.type
     }
-    if (!type) {
-      let component;
-      if ('$ref' in parameter) {
-        dlog('Inside of NOTYPE Contains $ref')
-        component = this.findComponentByPath(parameter.$ref, this.components);
-      }
-      if ('allOf' in parameter && ('$ref' in parameter.allOf[0])) {
-        dlog('Inside of NOTYPE Contains allOf')
-        component = this.findComponentByPath(parameter.allOf[0].$ref)
-      }
-      if ('oneOf' in parameter && ('$ref' in parameter.oneOf[0])) {
-        dlog('Inside of NOTYPE Contains oneOf')
-        component = this.findComponentByPath(parameter.oneOf[0].$ref)
-      }
-      if ('anyOf' in parameter && ('$ref' in parameter.anyOf[0])) {
-        dlog('Inside of NOTYPE Contains anyOf')
-        component = this.findComponentByPath(parameter.anyOf[0].$ref)
-      }
-      parameter.schema = component;
-      if (parameter.schema) {
-        if (parameter.schema.type) type = parameter.schema.type
-      } else {
-        if (parameter.type) type = parameter.type
-      }
-      if(!type)console.log('Not Found TYPE to Parameter: ', parameter)
-    }
 
+    if(!type)console.log('Not Found TYPE to Parameter: ', parameter)
     switch (type) {
       case 'string':
         finalText = this._getKeyStringText(parameter);
