@@ -34,3 +34,7 @@ Used for openAPI 3.0.0. Components used in schema.
 
 ### Version
 actually supports only OpenAPI 3.x.x
+
+Its basically a Fork version of the swagger-to-joi library,
+but, working and trying to clean the code.
+
